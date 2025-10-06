@@ -1,20 +1,20 @@
+#!/usr/bin/env python3
 import sys
 import os
 import zlib
 from hashlib import sha1
 
 
-
 def help():
-    print("orma - a simple version control system")
-    print("Commands:")
+    print("\nWelcome to ORMA - a simple version control system\n")
+    print("\nCommands:\n")
     print("  init/start               Initialize a new orma repository")
     print("  save <message>          Save the current state with a commit message")
     print("  history                 Show commit history")
     print("  revert <commit-hash>    Revert to a specific commit")
     print("  help                    Show this help message")
 
-    print("  __low level commands__")
+    print("  \n__low level commands__\n")
 
     print("  hash-object -w <file>   Hash a file and store it as a blob object")
     print("  cat-file -p <hash>      Display the content of an object")
@@ -252,7 +252,7 @@ def writeTree(directory="."):
     return treeHash
 
 def main():
-    print("Logs from your program will appear here!", file=sys.stderr)
+   
     command = sys.argv[1]
     if command == "init" or command == "start":
          orma_start()
