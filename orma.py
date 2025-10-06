@@ -5,6 +5,37 @@ from hashlib import sha1
 
 
 
+def help():
+    print("orma - a simple version control system")
+    print("Commands:")
+    print("  init/start               Initialize a new orma repository")
+    print("  save <message>          Save the current state with a commit message")
+    print("  history                 Show commit history")
+    print("  revert <commit-hash>    Revert to a specific commit")
+    print("  help                    Show this help message")
+
+    print("  __low level commands__")
+
+    print("  hash-object -w <file>   Hash a file and store it as a blob object")
+    print("  cat-file -p <hash>      Display the content of an object")
+    print("  ls-tree --name-only <hash> List names of items in a tree object")
+    print("  write-tree              Create a tree object from the current directory")
+    print("  commit-tree <tree> <parent> <message> Create a commit object")
+    
+
+def orma_start():
+    if os.path.exists(".orma"):
+        print("orma repository already exists")
+        return
+    os.mkdir(".orma")
+    os.mkdir(".orma/objects")
+    os.mkdir(".orma/refs")
+    os.mkdir(".orma/refs/heads")
+    with open(".orma/HEAD", "w") as f:
+        f.write("ref: refs/heads/main\n")
+    print("Initialized orma repository use help to see commands")
+
+
 def read_object(sha):
   
     path = f".orma/objects/{sha[:2]}/{sha[2:]}"
@@ -223,14 +254,8 @@ def writeTree(directory="."):
 def main():
     print("Logs from your program will appear here!", file=sys.stderr)
     command = sys.argv[1]
-    if command == "init":
-         os.mkdir(".orma")
-         os.mkdir(".orma/objects")
-         os.mkdir(".orma/refs")
-         os.mkdir(".orma/refs/heads")
-         with open(".orma/HEAD", "w") as f:
-             f.write("ref: refs/heads/main\n")
-         print("Initialized orma directory")
+    if command == "init" or command == "start":
+         orma_start()
 
     elif command == "cat-file" and sys.argv[2] == "-p":
         file = sys.argv[3]
@@ -241,7 +266,8 @@ def main():
             header_end = data.find(b'\x00')
             content = data[header_end + 1:]
             print(content.decode('utf-8'), end="")
-
+    elif command == "help":
+        help()
     elif command == "hash-object" and sys.argv[2] == "-w":
 
         file = sys.argv[3]
